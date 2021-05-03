@@ -10,6 +10,7 @@ flask-sqlalchemy = "*"
 pylint = "*"
 yapf = "*"
 pymysql = "*"
+flask-cors = "*"
 
 [dev-packages]
 

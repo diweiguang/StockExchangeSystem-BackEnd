@@ -26,3 +26,28 @@ class StockCompany(db.Model):
     addr = db.Column(db.String(255), doc="注册地址")
     oaddr = db.Column(db.String(255), doc="办公地址")
     desc = db.Column(db.Text(), doc="公司简介")
+    
+    def to_json(self):
+        """ 对象转为 Json格式 """
+        return {
+            'code': self.code,
+            'stockname': self.stockname,
+            'jys': self.jys,
+            'name': self.name,
+            'ename': self.ename,
+            'market': self.market,
+            'idea': self.idea,
+            'ldate': self.ldate,
+            'sprice': self.sprice,
+            'principal': self.principal,
+            'rdate': self.rdate,
+            'rprice': self.rprice,
+            'instype': self.instype,
+            'organ': self.organ,
+            'phone': self.phone,
+            'site': self.site,
+            'post': self.post,
+            'addr': self.addr,
+            'oaddr': self.oaddr,
+            'desc': self.desc
+        }

@@ -142,3 +142,31 @@ class StockApi(object):
             print(f'历史分时及级别成交数据错误:{e}')
         finally:
             return deal
+        
+    @classmethod
+    def get_updown_week(cls) -> object:
+        """ 周涨跌数据 """
+        week = []
+        try:
+            url = f'http://ig507.com/data/all/zzdpm?licence={cls.license}'
+            resp = requests.get(url)
+            if resp.status_code == 200:
+                week = resp.json()
+        except Exception as e:
+            print(f'周涨跌数据错误:{e}')
+        finally:
+            return week
+        
+    @classmethod
+    def get_updown_month(cls) -> object:
+        """ 月涨跌数据 """
+        month = []
+        try:
+            url = f'http://ig507.com/data/all/yzdpm?licence={cls.license}'
+            resp = requests.get(url)
+            if resp.status_code == 200:
+                month = resp.json()
+        except Exception as e:
+            print(f'月涨跌数据错误:{e}')
+        finally:
+            return month
