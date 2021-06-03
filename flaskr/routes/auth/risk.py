@@ -39,6 +39,23 @@ def risk_stock():
         result['msg'] = f'风险股票错误:{e}'
     finally:
         return resp(result['code'], result['msg'], result['data'])
+    
+@risk_bp.route('/stock', methods=['GET'])
+# 参数: stock_code
+def risk_stock_one():
+    """ 风险股票 """
+    result = {'code': 200, 'msg': 'ok', 'data': {}}
+    try:
+        if request.args.get('stock_code') is None:
+            raise Exception('参数错误！')
+        stock = db.session.query(RiskStock).filter(RiskStock.stock_code == request.args.get('stock_code')).first()
+        if stock is not None:
+            result['data'] = stock.to_json()
+    except Exception as e:
+        result['code'] = 500
+        result['msg'] = f'风险股票错误:{e}'
+    finally:
+        return resp(result['code'], result['msg'], result['data'])
 
 @risk_bp.route('/stocklist', methods=['POST'])
 # 参数: stock_code / stock_name / status / status_desc

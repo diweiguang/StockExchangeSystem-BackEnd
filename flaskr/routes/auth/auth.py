@@ -89,17 +89,20 @@ def userInfo():
     #拿到token，去换取用户信息
     return resp(200, 'ok', verify_token(token))
 
+
 @auth_bp.route('/userlist', methods=['GET'])
 # 参数:pagelimit / pagenum
 def userList():
     """ 用户列表 """
     result = {'code': 200, 'msg': 'ok', 'data': {'account_list': [], 'sum': 0}}
     try:
-        if request.args.get('pagelimit') is None or request.args.get('pagenum') is None:
+        if request.args.get('pagelimit') is None or request.args.get(
+                'pagenum') is None:
             raise Exception('参数错误！')
         limit, offset = pagination(int(request.args.get('pagelimit')),
                                    int(request.args.get('pagenum')))
-        account_list = Account.query.filter(Account.role == 'user').order_by(Account.create_time).limit(limit).offset(offset).all()
+        account_list = Account.query.filter(Account.role == 'user').order_by(
+            Account.create_time).limit(limit).offset(offset).all()
         _sum = Account.query.filter(Account.role == 'user').count()
         # 转化json格式
         if account_list is not None:
@@ -114,10 +117,9 @@ def userList():
 
 
 @auth_bp.route('/user', methods=['DELETE'])
-# @login_required
 # 参数：id
 def delete_user():
-    """ 删除自选股 """
+    """ 删除用户 """
     result = {'code': 200, 'msg': 'ok', 'data': {}}
     try:
         if request.args.get('id') is None:
