@@ -1,8 +1,7 @@
 #coding:utf-8
 # 股市行情(公司)路由
 
-from operator import contains
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
 from flaskr.services.stock_api import StockApi  # 开放接口
 from flaskr.models.stocks import StockCompany  # 公司模型
 from flaskr.models import db
@@ -26,6 +25,7 @@ def get_all_stocks():
         for stock in stock_list:
             time.sleep(2)  # 限制请求频率
             stock_company = StockApi.get_company(stock)  # 获取公司详细信息
+            status = 'ok'
             sc = StockCompany(code=stock_company['code'],
                               stockname=stock_company['stockname'],
                               jys=stock_company['jys'],
@@ -45,7 +45,9 @@ def get_all_stocks():
                               post=stock_company['post'],
                               addr=stock_company['addr'],
                               oaddr=stock_company['oaddr'],
-                              desc=stock_company['desc'])
+                              desc=stock_company['desc'],
+                              status=status,
+                              status_desc='')
             db.session.add(sc)
             db.session.commit()
             print(sc.code)
@@ -59,7 +61,7 @@ def get_all_stocks():
 @stock_bp.route('/<int:pagelimit>/<int:pagenum>', methods=['GET'])
 def get_stock_companies(pagelimit, pagenum):
     """ 批量股票公司列表接口 """
-    result = {'code': 200, 'msg': 'ok', 'data': { 'companies': [], 'sum': 0}}
+    result = {'code': 200, 'msg': 'ok', 'data': {'companies': [], 'sum': 0}}
     try:
         # 分页
         limit, offset = pagination(pagelimit, pagenum)
@@ -78,6 +80,70 @@ def get_stock_companies(pagelimit, pagenum):
     finally:
         return resp(result['code'], result['msg'], result['data'])
 
+
+@stock_bp.route('/stockname', methods=['GET'])
+def get_stockname():
+    """ 股票公司名称模糊查询接口 """
+    result = {'code': 200, 'msg': 'ok', 'data': {'companies': [], 'sum': 0}}
+    try:
+        if request.args.get('stockname') is None or request.args.get(
+                'pagelimit') is None or request.args.get('pagenum') is None:
+            raise Exception('参数错误！')
+
+        limit, offset = pagination(int(request.args.get('pagelimit')),
+                                   int(request.args.get('pagenum')))
+        # 从数据库读取
+        companies = StockCompany.query.filter(
+            StockCompany.stockname.like("%" + request.args.get('stockname') +
+                                        "%") if request.args.
+            get('stockname') is not None else "").order_by(
+                StockCompany.code).limit(limit).offset(offset).all()
+        _sum = StockCompany.query.filter(
+            StockCompany.stockname.like("%" + request.args.get('stockname') +
+                                        "%") if request.args.get('stockname')
+            is not None else "").limit(limit).offset(offset).count()
+        # 转化json格式
+        for item in companies:
+            result['data']['companies'].append(item.to_json())
+        result['data']['sum'] = _sum
+    except Exception as e:
+        result['code'] = 500
+        result['msg'] = f'名称模糊查询股票公司接口错误: {e}'
+    finally:
+        return resp(result['code'], result['msg'], result['data'])
+
+
+@stock_bp.route('/stockcode', methods=['GET'])
+def get_stockcode():
+    """ 股票公司编码查询接口 """
+    result = {'code': 200, 'msg': 'ok', 'data': {'companies': [], 'sum': 0}}
+    try:
+        if request.args.get('stockcode') is None or request.args.get(
+                'pagelimit') is None or request.args.get('pagenum') is None:
+            raise Exception('参数错误！')
+
+        limit, offset = pagination(int(request.args.get('pagelimit')),
+                                   int(request.args.get('pagenum')))
+        # 从数据库读取
+        companies = StockCompany.query.filter(
+            StockCompany.code.like("%" + request.args.get('stockcode') +
+                                        "%") if request.args.
+            get('stockcode') is not None else "").order_by(
+                StockCompany.code).limit(limit).offset(offset).all()
+        _sum = StockCompany.query.filter(
+            StockCompany.code.like("%" + request.args.get('stockcode') +
+                                        "%") if request.args.get('stockcode')
+            is not None else "").limit(limit).offset(offset).count()
+        # 转化json格式
+        for item in companies:
+            result['data']['companies'].append(item.to_json())
+        result['data']['sum'] = _sum
+    except Exception as e:
+        result['code'] = 500
+        result['msg'] = f'代码模糊查询股票公司接口错误: {e}'
+        print(result)
+    finally:
+        return resp(result['code'], result['msg'], result['data'])
 
 @stock_bp.route('/<string:code>', methods=['GET'])
 def get_stock_company(code):
@@ -171,7 +237,8 @@ def get_stock_hist_realtimedeal(code, level):
         print(result)
     finally:
         return resp(result['code'], result['msg'], result['data'])
-    
+
+
 @stock_bp.route('/week/updown', methods=['GET'])
 def get_stock_week_updown():
     """ 周涨跌数据接口 """
@@ -184,7 +251,8 @@ def get_stock_week_updown():
         print(result)
     finally:
         return resp(result['code'], result['msg'], result['data'])
-    
+
+
 @stock_bp.route('/month/updown', methods=['GET'])
 def get_stock_month_updown():
     """ 月涨跌数据接口 """

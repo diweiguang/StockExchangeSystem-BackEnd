@@ -5,7 +5,7 @@ from . import db
     
 class StockCompany(db.Model):
     """ 公司模型 """
-    __tablename__ = 'stock_company'
+    __tablename__ = 'tb_stock_company'
     code = db.Column(db.String(8), primary_key=True)
     stockname = db.Column(db.String(15), doc="股票名称", unique=True, nullable=True)
     jys = db.Column(db.String(3), doc="交易所", nullable=True)

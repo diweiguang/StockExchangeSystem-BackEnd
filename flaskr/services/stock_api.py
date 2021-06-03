@@ -1,4 +1,6 @@
 import requests
+import time
+from random import randint, random
 
 class StockApi(object):
     license = '9F83CEA9-6399-A249-E1BC-94B317827892'
@@ -68,7 +70,6 @@ class StockApi(object):
             resp = requests.get(url)
             if resp.status_code == 200:
                 data = resp.json()
-                print(data)
                 stock = {
                     'fm': data['fm'],
                     'hs': data['hs'],
@@ -76,10 +77,12 @@ class StockApi(object):
                     'high': data['h'],
                     'low': data['l'],
                     'pc': data['pc'],
+                    'p': data['p'],
                     'sz': data['sz'],
                     'cje': data['cje'],
                     'ud': data['ud'],
                     'volume': data['v'],
+                    'yc': data['yc'],
                     't': data['t']
                 }
         except Exception as e:

@@ -1,5 +1,6 @@
 from flask import Flask, render_template
 from flask_cors import CORS
+# from flask_cache import Cache
 from . import settings
 from . import routes, models
 
@@ -9,7 +10,8 @@ def create_app():
                 static_folder='../../client/dist/static',
                 template_folder='../../client/dist')  # app核心对象
 
-
+    # cache = Cache(config={'CACHE_TYPE': 'simple'})
+    
     # 设置跨域请求
     CORS(app, supports_credentials=True)
 
@@ -17,6 +19,7 @@ def create_app():
 
     models.init_app(app)
     routes.init_app(app)
+    # cache.init_app(app)
 
     # 配置首页路由
     @app.route('/', methods=['GET'])

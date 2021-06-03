@@ -11,6 +11,7 @@ pylint = "*"
 yapf = "*"
 pymysql = "*"
 flask-cors = "*"
+flask-cache = "*"
 
 [dev-packages]
 
