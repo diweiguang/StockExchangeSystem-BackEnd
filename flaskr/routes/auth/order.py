@@ -53,11 +53,18 @@ def delete_order():
     """ 删除委托订单 """
     result = {'code': 200, 'msg': 'ok', 'data': {}}
     try:
-        if request.args.get('id') is None:
+        if request.args.get('id') is None or request.args.get('account_id') is None:
             raise Exception('参数错误！')
         ass = Order.query.filter(Order.id == request.args.get('id')).first()
-        # db.session.delete(ass)
-        # db.session.commit()
+        
+        account = db.session.query(Account).filter(
+            Account.id == request.args.get('account_id')).first()
+        # 计算资产
+        fee = float(ass.volume * ass.price)
+        fee = -1 * fee if request.args.get('direction') == 'buy' else fee
+        account.restAsset = account.restAsset + fee
+        ass.status = 3
+        db.session.commit()
         if ass is None:
             raise Exception('未找到数据！')
         result['data'] = True
@@ -102,6 +109,7 @@ def add_order():
                       order_price=req['order_price'],
                       price=req['price'],
                       create_time=now)
+        
         db.session.add(order)
         db.session.commit()
         result['data'] = order.to_json()
