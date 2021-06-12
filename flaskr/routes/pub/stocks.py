@@ -2,11 +2,11 @@
 # 股市行情(公司)路由
 
 from flask import Blueprint, jsonify, request
-from flaskr.services.stock_api import StockApi  # 开放接口
-from flaskr.models.stocks import StockCompany  # 公司模型
-from flaskr.models import db
-from flaskr.models.stocks import StockCompany
-from flaskr.utils import resp, pagination
+from services.stock_api import StockApi  # 开放接口
+from models.stocks import StockCompany  # 公司模型
+from models import db
+from models.stocks import StockCompany
+from utils import resp, pagination
 import time
 
 stock_bp = Blueprint('stock', __name__, url_prefix='/stock')

@@ -2,9 +2,9 @@
 # 认证（登录/注册）路由
 
 from flask import Blueprint, request, session
-from flaskr.models.account import Account  # 账户模型
-from flaskr.models import db
-from flaskr.utils import create_token, login_required, resp, valid_login, valid_register, verify_token, pagination
+from models.account import Account  # 账户模型
+from models import db
+from utils import create_token, login_required, resp, valid_login, valid_register, verify_token, pagination
 import time
 
 from flask import Blueprint

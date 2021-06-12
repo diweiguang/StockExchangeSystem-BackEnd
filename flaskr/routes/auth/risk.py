@@ -3,10 +3,10 @@
 
 from re import S
 from flask import Blueprint, request
-from flaskr.models.risk_stock import RiskStock, RiskDegree
-from flaskr.models.stocks import StockCompany
-from flaskr.models import db
-from flaskr.utils import resp, pagination
+from models.risk_stock import RiskStock, RiskDegree
+from models.stocks import StockCompany
+from models import db
+from utils import resp, pagination
 import time
 
 from flask import Blueprint

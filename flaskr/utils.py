@@ -4,8 +4,8 @@
 import functools
 from flask import request, jsonify, current_app
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
-from flaskr.models.account import Account  # 账户模型
-from flaskr.models import db
+from models.account import Account  # 账户模型
+from models import db
 
 
 def resp(code: int, msg: str, data):

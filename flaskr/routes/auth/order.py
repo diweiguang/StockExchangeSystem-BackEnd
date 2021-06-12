@@ -2,11 +2,11 @@
 # 委托交易路由
 
 from flask import Blueprint, request
-from flaskr.models.account import Account
-from flaskr.models.order import Order  # 订单模型
-from flaskr.models.account_order import AccountOrder
-from flaskr.models import db
-from flaskr.utils import resp, pagination
+from models.account import Account
+from models.order import Order  # 订单模型
+from models.account_order import AccountOrder
+from models import db
+from utils import resp, pagination
 import time
 
 from flask import Blueprint

@@ -1,5 +1,5 @@
 [[source]]
-url = "https://pypi.tuna.tsinghua.edu.cn/simple/"
+url = "https://pypi.mirrors.ustc.edu.cn/simple/"
 verify_ssl = true
 name = "pypi"
 
@@ -12,6 +12,7 @@ yapf = "*"
 pymysql = "*"
 flask-cors = "*"
 flask-cache = "*"
+pyinstaller = "*"
 
 [dev-packages]
 
